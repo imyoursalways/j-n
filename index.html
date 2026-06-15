@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neethu & Jithin - Wedding Invitation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@400;700&display=swap');
+
+        :root {
+            --header-gold: #DAB96B;
+            --text-light: #FAF3E0; 
+            --glass-bg: rgba(20, 20, 20, 0.9);
+            --book-width: 90vw;
+            --book-height: 80vh;
+            --page-width: calc(var(--book-width) / 2);
+        }
+
+        /* Basic Setup & Background */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Dancing Script', cursive;
+            color: var(--text-light);
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            perspective: 2500px;
+            background-color: #1a1a1a;
+            font-size: 1.3rem;
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background-image: url('https://images.unsplash.com/photo-1541336032412-2048a678540d?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) brightness(0.4);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(218, 185, 107, 0.2);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            padding: 15px 0;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            margin: 0 20px;
+            transition: color 0.3s;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--header-gold);
+        }
+
+        /* --- Book & Page Structure --- */
+        .book {
+            width: var(--book-width);
+            height: var(--book-height);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            cursor: pointer;
+        }
+
+        .page {
+            width: var(--page-width);
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform-origin: left;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--glass-bg);
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 40px;
+        }
+
+        .back {
+            transform: rotateY(180deg);
+        }
+
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        #p1 { z-index: 3; }
+        #p2 { z-index: 2; }
+        #p1.flipped { z-index: 1; }
+        
+        .static-page {
+            width: var(--page-width);
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            border-right: 1px solid rgba(0, 0, 0, 0.5);
+            box-shadow: inset 10px 0px 20px -10px rgba(0,0,0,0.4);
+            border-radius: 4px 0 0 4px;
+            background-color: var(--glass-bg);
+            background-image: url('image_1.png');
+            background-size: auto 95%;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 0;
+        }
+
+        /* --- Content Styling --- */
+        .page-content {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        h1.names {
+            font-family: 'Alex Brush', cursive;
+            font-size: 6rem;
+            color: var(--header-gold);
+            margin: 10px 0;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-family: 'Alex Brush', cursive;
+            color: var(--header-gold);
+            font-size: 4.5rem;
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+        
+        .divider {
+            position: relative;
+            margin: 20px auto;
+            width: 60px;
+            height: 1px;
+            background: var(--header-gold);
+        }
+
+        .divider::after {
+            content: "✦";
+            position: absolute;
+            top: -12px; left: calc(50% - 6px);
+            color: var(--header-gold);
+            font-size: 14px;
+        }
+
+        p, .details, .intro {
+            font-size: 1.6rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .ai-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .timeline {
+            text-align: left;
+            width: 100%;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 25px;
+            border-left: 1px solid var(--header-gold);
+        }
+        .timeline-item::before {
+            content: "✦";
+            position: absolute;
+            left: -7px; top: 5px;
+            color: var(--header-gold);
+            background-color: var(--glass-bg);
+            font-size: 12px;
+        }
+
+        .time {
+            font-size: 1.2rem;
+            color: var(--header-gold);
+            font-weight: 700;
+        }
+        .event-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 2px 0 0 0;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 900px) {
+            body { perspective: 1500px; font-size: 1.1rem; }
+            .book { --book-width: 90vw; --book-height: 75vh; margin-top: 60px; }
+            .front, .back { padding: 20px; }
+            h1.names { font-size: 4rem; }
+            h2 { font-size: 3rem; }
+            p, .details, .intro { font-size: 1.3rem; }
+            nav a { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-container"></div>
+    
+    <!-- CHANGED: Navigation simplified -->
+    <nav>
+        <a data-page="0">Welcome</a>
+        <a data-page="1">Our Story</a>
+        <a data-page="2">Schedule</a>
+    </nav>
+
+    <!-- The Book -->
+    <div class="book">
+        
+        <div class="static-page"></div>
+
+        <!-- Page 1: Welcome & Our Story -->
+        <div class="page" id="p1">
+            <div class="front">
+                <div class="page-content">
+                    <div class="intro">We invite you to share in our happily ever after</div>
+                    <h1 class="names">Neethu & Jithin</h1>
+                    <div class="divider"></div>
+                    <div class="details">
+                        Wednesday, the nineteenth of August, 2026<br>
+                        Guruvayur Sree Krishna Temple
+                    </div>
+                </div>
+            </div>
+            <div class="back">
+                <div class="page-content">
+                    <h2>Our Story</h2>
+                    <p>For a decade, we balanced our lives together as an architect and a civil engineer, building our friendship on crumpled blueprints and always remaining each other's strongest structural support. Now, with the wedding invitations sent and our greatest collaboration yet rapidly approaching, we are finalizing the most important blueprint of our lives. As we stand hand-in-hand looking at the empty lot where our house will soon rise, we know this marriage is structurally sound and built to last.</p>
+                     <img src="image_2.png" alt="Story" class="ai-image">
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Schedule & Thank You Note -->
+        <div class="page" id="p2">
+            <div class="front">
+                <div class="page-content">
+                    <h2>The Schedule</h2>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="time">6:00 AM - 7:00 AM</div>
+                            <h3 class="event-title">Thalikettu</h3>
+                            <p>Guruvayur Temple Nada</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="time">9:00 AM - 11:00 AM</div>
+                            <h3 class="event-title">Wedding Ceremony</h3>
+                            <p>Gokulam Vanamala Auditorium</p>
+                        </div>
+                    </div>
+                    <!-- CHANGED: Thank You note added here -->
+                    <div class="divider" style="margin-top: 40px;"></div>
+                    <h2>Thank You</h2>
+                    <p>Your presence is the greatest gift of all.</p>
+                </div>
+            </div>
+            <div class="back">
+                <!-- This is now the inside of the back cover, can be left blank -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const book = document.querySelector('.book');
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            // CHANGED: totalPages is now based on the new nav
+            let currentPage = 0;
+            const totalPages = navLinks.length; 
+
+            // --- Core Functions ---
+            function updateNav(targetPage) {
+                navLinks.forEach(link => link.classList.remove('active'));
+                const activeLink = document.querySelector(`nav a[data-page="${targetPage}"]`);
+                if (activeLink) activeLink.classList.add('active');
+            }
+
+            function goToPage(pageNum) {
+                if (pageNum < 0 || pageNum >= totalPages) return;
+
+                currentPage = pageNum;
+                // Logic remains the same, but totalPages is smaller
+                const pagesToFlip = Math.ceil((currentPage) / 2);
+
+                pages.forEach((page, index) => {
+                    if (index < pagesToFlip) {
+                        page.classList.add('flipped');
+                    } else {
+                        page.classList.remove('flipped');
+                    }
+                });
+                updateNav(currentPage);
+            }
+            
+            function turnPageForward() {
+                if (currentPage < totalPages - 1) {
+                    currentPage++;
+                    goToPage(currentPage);
+                }
+            }
+
+            function turnPageBackward() {
+                 if (currentPage > 0) {
+                    currentPage--;
+                    goToPage(currentPage);
+                }
+            }
+
+            // --- Event Listeners ---
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const targetPage = parseInt(e.target.getAttribute('data-page'));
+                    goToPage(targetPage);
+                });
+            });
+
+            book.addEventListener('click', (e) => {
+                if (e.target.classList.contains('static-page') || e.target.closest('form')) {
+                    return;
+                }
+                const bookRect = book.getBoundingClientRect();
+                if (e.clientX > bookRect.left + bookRect.width / 2) {
+                    turnPageForward();
+                } 
+                else if (e.clientX < bookRect.left + bookRect.width / 2) {
+                    turnPageBackward();
+                }
+            });
+
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const swipeThreshold = 50; 
+
+            book.addEventListener('touchstart', (e) => {
+                if (e.target.closest('form')) return;
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            book.addEventListener('touchend', (e) => {
+                if (e.target.closest('form')) return;
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                const bookMiddle = window.innerWidth / 2;
+
+                if (touchStartX - touchEndX > swipeThreshold) {
+                    if (touchStartX > bookMiddle) {
+                         turnPageForward();
+                    }
+                } 
+                else if (touchEndX - touchStartX > swipeThreshold) {
+                    if (touchStartX < bookMiddle) {
+                        turnPageBackward();
+                    }
+                }
+            }
+
+            // --- Initialization ---
+            goToPage(0);
+        });
+    </script>
+</body>
+</html>
