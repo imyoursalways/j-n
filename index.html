@@ -240,6 +240,7 @@
         </div>
         
     </div>
+     <audio id="background-music" loop src="music_1.mp3"></audio>
     <div id="main-content">
         <div class="foreground-image-container">
             <img src="foreground-image.png" alt="Wedding illustration">
@@ -295,13 +296,16 @@
             const envelope = document.querySelector('.envelope');
             const mainContent = document.getElementById('main-content');
             const body = document.body;
-            
+            const backgroundMusic = document.getElementById('background-music');
             let isOpening = false;
 
             envelopeContainer.addEventListener('click', function() {
                 if (isOpening) return;
                 isOpening = true;
-                
+                  // Play the music
+                if (backgroundMusic) {
+                    backgroundMusic.play();
+                }
                 envelope.classList.add('open');
                 mainContent.classList.add('visible');
                 envelopeContainer.classList.add('opening');
