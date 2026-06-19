@@ -1,490 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neethu & Jithin - Wedding Invitation</title>
+    <title>Our Wedding</title>
+    
+    <!-- Link to Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Nunito+Sans:wght@300;400&display=swap');
 
-        :root {
-            --header-gold: #DAB96B;
-            --text-light: #FAF3E0;
-            --glass-bg: rgba(20, 20, 20, 0.9);
-        }
-
-        /* Basic Setup & Background */
-        body {
+        body, html {
             margin: 0;
             padding: 0;
-            font-family: 'Dancing Script', cursive;
-            color: var(--text-light);
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            perspective: 2500px;
-            background-color: #1a1a1a;
-            font-size: 1.3rem;
-        }
-
-        .background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            z-index: -2;
-            background-image: url('https://images.unsplash.com/photo-1541336032412-2048a678540d?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(100%) brightness(0.4);
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #F4F4F1;
+        }
+        
+        body.content-visible {
+            overflow: auto; /* Restore scrolling when content is visible */
         }
 
-        /* --- Navigation --- */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(218, 185, 107, 0.2);
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            padding: 15px 0;
+        .scrollable-content {
+            position: relative; z-index: 1; 
+            /* --- THIS IS THE FIX --- */
+            /* Increased padding to ensure the last card can scroll fully above the image */
+            padding-bottom: 45vh; 
         }
 
-        nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 1.3rem;
-            margin: 0 20px;
-            transition: color 0.3s;
-            cursor: pointer;
-            font-weight: 700;
+        /* --- Symmetrical Flap Animation CSS --- */
+        #envelope-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #8A9A83; 
+            display: flex; justify-content: center;
+            align-items: center; flex-direction: column;
+            z-index: 300;
+            transition: background-color 1s 0.5s ease;
         }
-
-        nav a:hover,
-        nav a.active {
-            color: var(--header-gold);
+        .envelope-wrapper {
+            perspective: 1000px;
         }
-
-        /* --- SHARED BOOK & PAGE STYLES --- */
-        .book,
-        .mobile-book {
+        .envelope {
             position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.5s;
+            width: 100vw; height: 60vh;
             cursor: pointer;
-            margin-top: 50px;
-        }
-
-        .page {
             transform-style: preserve-3d;
-            transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
-            transform-origin: left;
         }
-
-        .front,
-        .back {
+        .flap {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--glass-bg);
-            backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-
-        .back {
-            transform: rotateY(180deg);
-        }
-
-        .page.flipped {
-            transform: rotateY(-180deg);
-        }
-
-        /* --- DESKTOP BOOK --- */
-        .book {
-            width: 90vw;
-            height: 80vh;
-        }
-
-        .book .page {
-            width: calc(90vw / 2);
-            height: 100%;
-            position: absolute;
-            top: 0;
-            right: 0;
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .book .front,
-        .book .back {
-            padding: 40px;
-        }
-
-        .book .static-page {
-            width: calc(90vw / 2);
-            height: 100%;
-            position: absolute;
-            top: 0;
             left: 0;
-            box-shadow: inset 10px 0px 20px -10px rgba(0, 0, 0, 0.4);
-            background-color: var(--glass-bg);
-            background-image: url('image_1.png');
-            background-size: auto 95%;
-            background-position: center;
-            background-repeat: no-repeat;
+            width: 100%; height: 50%; /* Each flap is now 50% of the height */
+            border-radius: 10px;
+            transition: transform 1.2s ease-in-out, background-color 1s 0.5s ease;
         }
-
-        /* --- MOBILE BOOK --- */
-        .mobile-book {
-            width: 95vw;
-            height: 80vh;
-        }
-
-        .mobile-book .page {
-            width: 100%;
-            height: 100%;
-            position: absolute;
+        .flap.top {
             top: 0;
-            left: 0;
+            background-color: #9db194;
+            z-index: 3; /* Top flap is above the bottom one */
+            transform-origin: top;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+        .flap.bottom {
+            bottom: 0;
+            background-color: #9db194;
+            z-index: 2; /* Bottom flap is below the top one */
+            transform-origin: bottom;
+            /* Mirrored clip-path for the bottom flap */
+            clip-path: polygon(50% 0, 100% 100%, 0 100%);
+        }
+        .seal {
+            position: absolute;
+            top: 50%; left: 50%; /* Centered perfectly on the seam */
+            transform: translate(-50%, -50%);
+            width: 120px; height: 120px;
+            background-color: #EAE7DC;
+            border-radius: 50%;
+            z-index: 4; /* On top of everything */
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Cormorant Garamond', serif; 
+            font-size: 2.5em;
+            color: #b8a99a;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 3px solid #d4c4b4;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* --- Animation States --- */
+        .envelope.open .flap.top {
+            transform: rotateX(180deg);
+        }
+        .envelope.open .flap.bottom {
+            transform: rotateX(-180deg);
+        }
+        .envelope.open .seal {
+            opacity: 0;
         }
 
-        .mobile-book .front {
-            padding: 30px 25px;
+        #envelope-container.opening {
+            background-color: transparent;
         }
-
-        .mobile-book #mobile-cover-page .front {
-            background-image: url('image_1.png');
-            background-size: auto 95%;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding: 0;
+        #envelope-container.opening .flap {
+            background-color: transparent !important;
         }
-
-        .mobile-book .back {
-            display: none;
+        #envelope-container.opening .envelope-text {
+            opacity: 0;
         }
-
-        /* Mobile book is single-sided */
-
-        /* --- Content Styling --- */
-        .page-content {
+        
+        #envelope-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        /* --- MODIFIED THIS RULE --- */
+        .envelope-text { 
+            position: absolute;
+            /* Position text below the seal (seal is at 50%, has 120px height) */
+            top: calc(50% + 75px); 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
             text-align: center;
-            width: 100%;
-            max-width: 500px;
+            color: #FAF3E0; 
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 1.2em; /* Adjusted font size for balance */
+            transition: opacity 0.5s ease;
+            z-index: 5; /* Keep it above the flaps initially */
         }
+        #seal { width: 100px; height: 100px; background-color: #EAE7DC; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-family: 'Cormorant Garamond', serif; font-size: 1.8em; color: #b8a99a; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border: 3px solid #d4c4b4; }
+        .fade-out { opacity: 0; pointer-events: none; }
 
-        h1.names {
-            font-family: 'Alex Brush', cursive;
-            font-size: 5rem;
-            color: var(--header-gold);
-            margin: 10px 0;
-            font-weight: 400;
-        }
-
-        h2 {
-            font-family: 'Alex Brush', cursive;
-            font-size: 4.5rem;
-            color: var(--header-gold);
-            margin-bottom: 5px;
-            font-weight: 400;
-        }
-
-        .divider {
-            margin: 20px auto;
-            width: 60px;
-            height: 1px;
-            background: var(--header-gold);
+        #main-content {
+            opacity: 0; 
+            z-index: 20;
             position: relative;
+            transition: opacity 1s 0.5s ease;
         }
-
-        .divider::after {
-            content: "✦";
-            position: absolute;
-            top: -12px;
-            left: calc(50% - 6px);
-            color: var(--header-gold);
-            font-size: 14px;
+        #main-content.visible {
+            opacity: 1; 
         }
-
-        p,
-        .details,
-        .intro {
-            font-size: 1.6rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .ai-image {
+/* 
+         * This container is fixed to the bottom. 
+         * Its width matches the content cards.
+         */
+        .foreground-image-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            pointer-events: none;
+            
             width: 100%;
-            max-width: 400px;
-            height: auto;
-            border-radius: 6px;
-            margin-top: 20px;
+            max-width: 650px; /* This makes it match the content width */
+            height: 35vh;
         }
-
-        .timeline {
-            text-align: left;
+        
+        .foreground-image-container img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: bottom;
+        }
+        /* --- Header & Animation --- */
+        .header-content {
+            min-height: 80vh; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center; color: #333; overflow: hidden;
+        }
+        .header-text-box { padding: 2rem; }
+        
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        .timeline-item {
-            position: relative;
-            padding-left: 25px;
-            margin-bottom: 25px;
-            border-left: 1px solid var(--header-gold);
+        .header-content .subtitle span {
+            display: block;
+            opacity: 0; /* Start hidden */
+            animation: fadeInSlideUp 1s ease-out forwards;
         }
+        .header-content .subtitle span:first-child { animation-delay: 0.8s; }
+        .header-content .subtitle span:last-child { animation-delay: 0.9s; }
 
-        .timeline-item::before {
-            content: "✦";
-            position: absolute;
-            left: -7px;
-            top: 5px;
-            color: var(--header-gold);
-            background-color: var(--glass-bg);
-            font-size: 12px;
+        .header-content h1 { font-family: 'Cormorant Garamond', serif; font-size: 4em; margin: 0.2em 0; font-weight: 600; animation: fadeInSlideUp 1.5s ease-out 1.7s forwards; opacity: 0; }
+        .header-content .date { font-family: 'Cormorant Garamond', serif;  color: #d58a8a; /* Warm Charcoal Text Color */font-size: 1.5em; margin-top: 0.5em; animation: fadeInSlideUp 1.5s ease-out 1.8s forwards; opacity: 0; }
+
+        /* --- Content Sections Styling --- */
+        .content-section {
+            padding: 40px 20px ; text-align: center; max-width: 600px;
+            margin: 0 auto; background-color: #FDFDFB; 
+            border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
+        .section-icon { font-size: 1.5em; color: #D4A3A3; margin-bottom: 10px; }
+        .content-section h2 { letter-spacing: 2px; font-size: 0.8em; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        .content-section h3 { font-family: 'Cormorant Garamond', serif; font-size: 2.5em; margin-top: 0; font-weight: 600; color: #333; }
+        .map-link { text-decoration: none; color: #D4A3A3; font-weight: bold; padding-bottom: 2px; margin-top: 15px; display: inline-block; }
 
-        .time {
-            font-size: 1.2rem;
-            color: var(--header-gold);
-            font-weight: 700;
+        .timeline { list-style: none; padding: 0; margin: 20px auto; max-width: 400px; text-align: left; }
+        .timeline li { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .timeline li:last-child { border-bottom: none; }
+        .timeline-icon { color: #D4A3A3; width: 40px; font-size: 1.2em; text-align: center; margin-right: 15px; }
+        .timeline-time { margin-left: auto; color: #777; }
+        
+        .rsvp-button { background-color: #D4A3A3; color: white; border: none; padding: 15px 30px; font-size: 1em; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease; margin-top: 20px; font-weight: bold; }
+        .rsvp-button:hover { background-color: #C89090; }
+        .respond-by { font-style: italic; font-size: 0.9em; color: #777; margin-top: 15px; }
+
+        /* --- Splitter Styling --- */
+        .splitter {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 100px auto 100px auto;
+            max-width: 600px;
+            color: #ccc;
         }
-
-        .event-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 2px 0 0 0;
+        .splitter::before, .splitter::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
         }
-
-        /* --- MEDIA QUERY SWITCH --- */
-        @media (min-width: 901px) {
-            .mobile-book {
-                display: none;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .book {
-                display: none;
-            }
-
-            nav a[data-desktop-only] {
-                display: none;
-            }
-
-            nav a[data-mobile-only] {
-                display: inline-block;
-            }
-
-            /* Font adjustments */
-            h1.names {
-                font-size: 4rem;
-            }
-
-            h2 {
-                font-size: 3rem;
-            }
-
-            p,
-            .details,
-            .intro {
-                font-size: 1.3rem;
-            }
-
-            nav a {
-                font-size: 1.1rem;
-                margin: 0 10px;
-            }
+        .splitter-icon {
+            font-size: 1.5em;
+            padding: 0 15px;
+            color: #D4A3A3;
         }
     </style>
 </head>
-
 <body>
 
-    <div class="background-container"></div>
-
-    <nav>
-        <a data-page-desktop="0" data-page-mobile="1">Welcome</a>
-        <a data-page-desktop="1" data-page-mobile="2">Our Story</a>
-        <a data-page-desktop="2" data-page-mobile="3">Schedule</a>
-        <a data-page-mobile="4" data-mobile-only style="display: none;">Thank You</a>
-    </nav>
-
-    <!-- DESKTOP BOOK -->
-    <div class="book">
-        <div class="static-page"></div>
-        <div class="page" id="dp1">
-            <div class="front">
-                <div class="page-content" id="desktop-welcome"></div>
-            </div>
-            <div class="back">
-                <div class="page-content" id="desktop-story"></div>
+    <div id="envelope-container">
+        <div class="envelope-wrapper">
+            <div class="envelope">
+                <div class="flap top"></div>
+                <div class="flap bottom"></div>
+                <div class="seal">J&N</div>
+                <div class="envelope-text"><p>This invitation is exclusively for you</p></div>
             </div>
         </div>
-        <div class="page" id="dp2">
-            <div class="front">
-                <div class="page-content" id="desktop-schedule"></div>
-            </div>
-            <div class="back">
-                <div class="page-content" id="desktop-thankyou"></div>
-            </div>
-        </div>
+        
     </div>
-
-    <!-- MOBILE BOOK -->
-    <div class="mobile-book">
-        <div class="page" id="mobile-cover-page">
-            <div class="front"></div>
+    <div id="main-content">
+        <div class="foreground-image-container">
+            <img src="foreground-image.png" alt="Wedding illustration">
         </div>
-        <div class="page" id="mp1">
-            <div class="front">
-                <div class="page-content" id="mobile-welcome"></div>
-            </div>
-        </div>
-        <div class="page" id="mp2">
-            <div class="front">
-                <div class="page-content" id="mobile-story"></div>
-            </div>
-        </div>
-        <div class="page" id="mp3">
-            <div class="front">
-                <div class="page-content" id="mobile-schedule"></div>
-            </div>
-        </div>
-        <div class="page" id="mp4">
-            <div class="front">
-                <div class="page-content" id="mobile-thankyou"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Universal Content Source -->
-    <div id="content-source" style="display: none;">
-        <div id="content-welcome">
-            <div class="intro">We invite you to share in our happily ever after</div>
-            <h1 class="names">Neethu & Jithin</h1>
-            <div class="divider"></div>
-            <div class="details">Wednesday, the nineteenth of August, 2026(19/08/2026)<br>Guruvayur Sree Krishna Temple</div>
-        </div>
-        <div id="content-story">
-            <h2>Our Story</h2>
-            <p>For a decade, we balanced our lives together as an architect and a civil engineer, building our
-                friendship on crumpled blueprints and always remaining each other's strongest structural support. Now,
-                with the wedding invitations sent and our greatest collaboration yet rapidly approaching, we are
-                finalizing the most important blueprint of our lives. As we stand hand-in-hand looking at the empty lot
-                where our house will soon rise, we know this marriage is structurally sound and built to last.</p>
-            <img src="image_2.png" alt="Story" class="ai-image">
-        </div>
-        <div id="content-schedule">
-            <h2>The Schedule</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="time">6:00 AM - 7:00 AM</div>
-                    <h3 class="event-title">Thalikettu</h3>
-                    <p>Guruvayur Temple Nada</p>
-                </div>
-                <div class="timeline-item">
-                    <div class="time">9:00 AM - 11:00 AM</div>
-                    <h3 class="event-title">Wedding Ceremony</h3>
-                    <p>Gokulam Vanamala Auditorium</p>
+        
+        <div class="scrollable-content">
+            <div class="header-content">
+                <div class="header-text-box">
+                    <p class="subtitle">
+                        <span>WE'RE GETTING</span>
+                        <span>MARRIED</span>
+                    </p>
+                    <h1>Jithin & Neethu</h1>
+                    <p class="date">August 19th, 2026</p>
                 </div>
             </div>
-        </div>
-        <div id="content-thankyou">
-            <div class="divider" style="margin-top: 40px;"></div>
-            <h2>Thank You</h2>
-            <p>Your presence is the greatest gift of all.</p>
+
+            <div class="content-section">
+                <div class="section-icon"><i class="fa-solid fa-gopuram"></i></div>
+                <h2>THE WEDDING</h2>
+                <h3>Guruvayur Sree Krishna Temple</h3>
+                <p><strong>6:00 AM</strong>, Thalikettu</p>
+                <p>Temple, East Nada, Guruvayur, Kerala</p>
+                <a href="https://www.google.com/maps/place/Guruvayur+Sree+Krishna+Temple/@10.5946914,76.0394266,1011m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba79461d5c8d24b:0x6f7a8d815f48709e!8m2!3d10.5946914!4d76.0394266!16zL20vMDZ6cDdn?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D" class="map-link">View on Google Maps <i class="fa-solid fa-arrow-right-long fa-sm"></i></a>
+            </div>
+
+            <div class="splitter">
+                <span class="splitter-icon">💍</span>
+            </div>
+
+            <div class="content-section">
+                <div class="section-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
+                <h2>THE CEREMONY</h2>
+                <h3>Gokulam Vanamala Auditorium</h3>
+                <a href="https://www.google.com/maps/place/Sree+Gokulam+Vanamala/@10.593086,76.0376152,1011m/data=!3m1!1e3!4m9!3m8!1s0x3ba7948a1a3f5379:0x7e6854449c21c7c2!5m2!4m1!1i2!8m2!3d10.593086!4d76.0401901!16s%2Fg%2F11bwpdsr8_?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D" class="map-link">View on Google Maps <i class="fa-solid fa-arrow-right-long fa-sm"></i></a>
+                <ul class="timeline">
+                    <li><div class="timeline-icon"><i class="fa-solid fa-heart" ></i></div> <span>Wedding Ceremony</span> <span class="timeline-time">9:00 AM - 11:00 AM</span></li>
+                    <li><div class="timeline-icon"><i class="fa-solid fa-utensils"></i></div> <span>Lunch</span> <span class="timeline-time">11:00 PM - 12:00 PM</span></li>
+                    
+                </ul>
+            </div>
+
+            <div class="splitter">
+                <span class="splitter-icon">✨</span>
+            </div>
+
         </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // --- Content Cloning ---
-            document.getElementById('desktop-welcome').innerHTML = document.getElementById('content-welcome').innerHTML;
-            document.getElementById('desktop-story').innerHTML = document.getElementById('content-story').innerHTML;
-            document.getElementById('desktop-schedule').innerHTML = document.getElementById('content-schedule').innerHTML;
-            document.getElementById('desktop-thankyou').innerHTML = document.getElementById('content-thankyou').innerHTML;
-            document.getElementById('mobile-welcome').innerHTML = document.getElementById('content-welcome').innerHTML;
-            document.getElementById('mobile-story').innerHTML = document.getElementById('content-story').innerHTML;
-            document.getElementById('mobile-schedule').innerHTML = document.getElementById('content-schedule').innerHTML;
-            document.getElementById('mobile-thankyou').innerHTML = document.getElementById('content-thankyou').innerHTML;
+       document.addEventListener('DOMContentLoaded', function() {
+            const envelopeContainer = document.getElementById('envelope-container');
+            const envelope = document.querySelector('.envelope');
+            const mainContent = document.getElementById('main-content');
+            const body = document.body;
+            
+            let isOpening = false;
 
-            // --- Logic ---
-            const isMobile = window.innerWidth <= 900;
-            const book = document.querySelector(isMobile ? '.mobile-book' : '.book');
-            const pages = book.querySelectorAll('.page');
-            const navLinks = document.querySelectorAll('nav a');
-            const pageCount = pages.length;
-            let currentPage = 0;
-
-            function updateNav() {
-                navLinks.forEach(link => {
-                    const pageNum = parseInt(link.getAttribute(isMobile ? 'data-page-mobile' : 'data-page-desktop'));
-                    if (pageNum === currentPage) {
-                        link.classList.add('active');
-                    } else {
-                        link.classList.remove('active');
-                    }
-                });
-            }
-
-            function goToPage(pageNum) {
-                if (pageNum < 0 || pageNum >= pageCount) return;
-                currentPage = pageNum;
-                let pagesToFlip;
-
-                if (isMobile) {
-                    pagesToFlip = pageNum;
-                    pages.forEach((page, index) => {
-                        page.style.zIndex = pageCount - index;
-                    });
-                } else {
-                    // Desktop has a different mapping of content pages to physical pages
-                    const desktopContentMap = [0, 1, 2, 2]; // Welcome, Story, Schedule, Thank you
-                    pagesToFlip = Math.ceil(desktopContentMap[pageNum] / 2);
-                }
-
-                pages.forEach((page, index) => {
-                    if (index < pagesToFlip) page.classList.add('flipped');
-                    else page.classList.remove('flipped');
-                });
-                updateNav();
-            }
-
-            // Event Listeners
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    const attr = isMobile ? 'data-page-mobile' : 'data-page-desktop';
-                    if (e.currentTarget.hasAttribute(attr)) {
-                        const targetPage = parseInt(e.currentTarget.getAttribute(attr));
-                        goToPage(targetPage);
-                    }
-                });
+            envelopeContainer.addEventListener('click', function() {
+                if (isOpening) return;
+                isOpening = true;
+                
+                envelope.classList.add('open');
+                mainContent.classList.add('visible');
+                envelopeContainer.classList.add('opening');
+                
+                setTimeout(() => {
+                    body.classList.add('content-visible');
+                    envelopeContainer.classList.add('hidden');
+                }, 1500); 
             });
-
-            book.addEventListener('click', (e) => {
-                if (e.target.closest('a')) return;
-                const bookRect = book.getBoundingClientRect();
-                const isRightHalf = e.clientX > bookRect.left + bookRect.width / 2;
-
-                let newPage = isRightHalf ? currentPage + 1 : currentPage - 1;
-                goToPage(newPage);
-            });
-
-            goToPage(0);
         });
     </script>
 </body>
-
 </html>
