@@ -12,6 +12,8 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Nunito+Sans:wght@300;400&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+        @import url('https://fonts.cdnfonts.com/css/brittany-signature');
+        @import url('https://googleapis.com');
 
         body,
         :root {
@@ -39,7 +41,7 @@
             background-size: cover;
             background-position: center;
             background-color: #193000;
-            filter: grayscale(20%) brightness(0.2);
+            filter: grayscale(40%) brightness(0.2);
         }
 
         .fade-in-element {
@@ -350,6 +352,10 @@
             padding: 1rem;
         }
 
+        .header-text-box h1 {
+            font-family: 'Brittany Signature', cursive;
+        }
+
         @keyframes fadeInSlideUp {
             from {
                 opacity: 0;
@@ -409,7 +415,7 @@
 
         .section-icon {
             font-size: 1.5em;
-            color: #e5196f;
+            color: #888;
             margin: auto;
             text-align: center;
             justify-content: center;
@@ -435,7 +441,7 @@
 
         .map-link {
             text-decoration: none;
-            color: #e5196f;
+            color:#888;
             font-weight: bold;
             padding-bottom: 2px;
             margin-top: 15px;
@@ -462,7 +468,7 @@
         }
 
         .timeline-icon {
-            color: #e5196f;
+            color: #888;
             width: 40px;
             font-size: 1.2em;
             text-align: center;
@@ -474,18 +480,7 @@
             color: #777;
         }
 
-        .rsvp-button {
-            background-color: #e5196f;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1em;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-            font-weight: bold;
-        }
+     
 
         .rsvp-button:hover {
             background-color: #C89090;
@@ -528,9 +523,14 @@
         }
 
 
-       .split-content-text h2,
+        .split-content-text h2,
         h3 {
             text-align: center;
+        }
+
+        p {
+            font-family: 'Roboto', sans-serif;
+            font-weight: lighter;
         }
 
         .split-content-text .section-icon {
@@ -589,9 +589,9 @@
         }
 
         .splitter-icon {
-            font-size: 1.5em;
+            font-size: 2em;
             padding: 0 15px;
-            color: #e5196f;
+            color: #DAB96B;
         }
     </style>
 </head>
@@ -621,11 +621,10 @@
             <div class="header-content">
                 <div class="header-text-box">
                     <p class="subtitle">
-                        <span>WE'RE GETTING</span>
-                        <span>MARRIED</span>
+                        <span>We're Getting Married</span>
                     </p>
                     <h1>Jithin </br>&</br>Neethu</h1>
-                    <p class="date">August 19th, 2026</p>
+                    
                 </div>
             </div>
 
@@ -633,24 +632,23 @@
                 <div class="split-content-section">
                     <div class="split-content-image">
                         <!-- IMPORTANT: Change "ceremony-image.jpg" to your actual image file name -->
-                        <img src="couple.png" alt="Photo of the couple or venue" class="fade-in-image">
+                        <img src="couple-2.png" alt="Photo of the couple or venue" class="fade-in-image">
                     </div>
                     <div class="split-content-text">
                         <div class="section-icon"><i class="fa-solid fa-gopuram"></i></div>
-                        <h1>THE WEDDING</h2>
-                            <h3>Guruvayur Sree Krishna Temple</h3>
-                            <p><strong>6:00 AM</strong>, Thalikettu</p>
-                            <p>Temple, East Nada, Guruvayur, Kerala</p>
-                            <a href="https://www.google.com/maps/place/Guruvayur+Sree+Krishna+Temple/@10.5946914,76.0394266,1011m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba79461d5c8d24b:0x6f7a8d815f48709e!8m2!3d10.5946914!4d76.0394266!16zL20vMDZ6cDdn?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D"
-                                class="map-link">View on Google Maps <i
-                                    class="fa-solid fa-arrow-right-long fa-sm"></i></a>
+                        <h2>The Wedding<h2>
+                        <h3>Guruvayur Sree Krishna Temple</h3>
+                        <p>6:00 AM, Thalikettu</p>
+                        <p>Temple, East Nada, Guruvayur, Kerala</p>
+                        <a href="https://www.google.com/maps/place/Guruvayur+Sree+Krishna+Temple/@10.5946914,76.0394266,1011m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba79461d5c8d24b:0x6f7a8d815f48709e!8m2!3d10.5946914!4d76.0394266!16zL20vMDZ6cDdn?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D"
+                            class="map-link">View on Google Maps <i class="fa-solid fa-arrow-right-long fa-sm"></i></a>
 
                     </div>
                 </div>
             </section>
 
             <div class="splitter">
-                <span class="splitter-icon">💍</span>
+                <span class="splitter-icon">❦</span>
             </div>
 
 
@@ -711,7 +709,7 @@
                 </div>
             </div>
             <div class="splitter">
-                <span class="splitter-icon">💍</span>
+                <span class="splitter-icon">❦</span>
             </div>
 
 
@@ -720,7 +718,7 @@
                 <div class="split-content-section">
                     <div class="split-content-image">
                         <!-- IMPORTANT: Change "ceremony-image.jpg" to your actual image file name -->
-                        <img src="couple-2.png" alt="Photo of the couple or venue" class="fade-in-image">
+                        <img src="couple.png" alt="Photo of the couple or venue" class="fade-in-image">
                     </div>
                     <div class="split-content-text">
                         <div class="section-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
@@ -728,14 +726,13 @@
                         <h3>Gokulam Vanamala Auditorium</h3>
                         <a href="https://www.google.com/maps/place/Sree+Gokulam+Vanamala/@10.593086,76.0376152,1011m/data=!3m1!1e3!4m9!3m8!1s0x3ba7948a1a3f5379:0x7e6854449c21c7c2!5m2!4m1!1i2!8m2!3d10.593086!4d76.0401901!16s%2Fg%2F11bwpdsr8_?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D"
                             class="map-link">View on Google Maps <i class="fa-solid fa-arrow-right-long fa-sm"></i></a>
-
                     </div>
                 </div>
             </section>
 
 
             <div class="splitter">
-                <span class="splitter-icon">💍</span>
+                <span class="splitter-icon">❦</span>
             </div>
 
             <!-- MODIFIED THIS SECTION -->
