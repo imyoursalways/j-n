@@ -1,99 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Wedding</title>
-    
+
     <!-- Link to Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Nunito+Sans:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            font-family: 'Nunito Sans', sans-serif;
-            background-color: #F4F4F1;
+        body,
+        :root {
+            --header-gold: #DAB96B;
+            --text-light: #E5D9B2;
+            --glass-bg: rgba(20, 20, 20, 1);
+            --book-width: 90vw;
+            --book-height: 80vh;
+            --page-width: calc(var(--book-width) / 2);
         }
-        
+
         body.content-visible {
-            overflow: auto; /* Restore scrolling when content is visible */
+            overflow: auto;
+            /* Restore scrolling when content is visible */
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center;
+            background-color: #193000;
+            filter: grayscale(20%) brightness(0.2);
+        }
+
+        .fade-in-element {
+            /* Start invisible */
+            opacity: 0;
+            /* Add a slight upward slide */
+            transform: translateY(10px);
+            /* Define the animation's duration and easing */
+            transition: opacity 1.2s ease-out, transform 12s ease-out;
+        }
+
+        .fade-in-element.is-visible {
+            /* The final, visible state */
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .scrollable-content {
-            position: relative; z-index: 1; 
+            position: relative;
+            z-index: 1;
             /* --- THIS IS THE FIX --- */
             /* Increased padding to ensure the last card can scroll fully above the image */
-            padding-bottom: 45vh; 
+            padding-bottom: 45vh;
+        }
+
+        .calendar {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            max-width: 600px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+            font-family: "Special Elite", system-ui;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .day-name {
+            font-weight: 600;
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            font-family: "Special Elite", system-ui;
+        }
+
+        .day {
+            padding: 8px 0;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            color: #333;
+            font-size: 0.95em;
+            font-family: "Special Elite", system-ui;
+        }
+
+        .day.empty {
+            background-color: transparent;
+        }
+
+        /* Specific styling for the circled date */
+        .day.circled {
+            border: 2px solid #e5196f;
+            color: #e5196f;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        /* Initial state of the flying elements */
+        .animated-element {
+            opacity: 0;
+        }
+
+        /* The animation class triggered by JavaScript */
+        .start-animation {
+            animation: flyIn 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes flyIn {
+            0% {
+                opacity: 0;
+                transform: translate(var(--startX), var(--startY)) rotate(var(--startRot));
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg);
+            }
         }
 
         /* --- Symmetrical Flap Animation CSS --- */
         #envelope-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #8A9A83; 
-            display: flex; justify-content: center;
-            align-items: center; flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #8A9A83;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
             z-index: 300;
             transition: background-color 1s 0.5s ease;
         }
+
         .envelope-wrapper {
             perspective: 1000px;
         }
+
         .envelope {
             position: relative;
-            width: 100vw; height: 60vh;
+            width: 100vw;
+            height: 60vh;
             cursor: pointer;
             transform-style: preserve-3d;
         }
+
         .flap {
             position: absolute;
             left: 0;
-            width: 100%; height: 50%; /* Each flap is now 50% of the height */
+            width: 100%;
+            height: 50%;
+            /* Each flap is now 50% of the height */
             border-radius: 10px;
             transition: transform 1.2s ease-in-out, background-color 1s 0.5s ease;
         }
+
         .flap.top {
             top: 0;
             background-color: #9db194;
-            z-index: 3; /* Top flap is above the bottom one */
+            z-index: 3;
+            /* Top flap is above the bottom one */
             transform-origin: top;
             clip-path: polygon(0 0, 100% 0, 50% 100%);
         }
+
         .flap.bottom {
             bottom: 0;
             background-color: #9db194;
-            z-index: 2; /* Bottom flap is below the top one */
+            z-index: 2;
+            /* Bottom flap is below the top one */
             transform-origin: bottom;
             /* Mirrored clip-path for the bottom flap */
             clip-path: polygon(50% 0, 100% 100%, 0 100%);
         }
+
         .seal {
             position: absolute;
-            top: 50%; left: 50%; /* Centered perfectly on the seam */
+            top: 50%;
+            left: 50%;
+            /* Centered perfectly on the seam */
             transform: translate(-50%, -50%);
-            width: 120px; height: 120px;
+            width: 120px;
+            height: 120px;
             background-color: #EAE7DC;
             border-radius: 50%;
-            z-index: 4; /* On top of everything */
-            display: flex; justify-content: center; align-items: center;
-            font-family: 'Cormorant Garamond', serif; 
+            z-index: 4;
+            /* On top of everything */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Cormorant Garamond', serif;
             font-size: 2.5em;
             color: #b8a99a;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border: 3px solid #d4c4b4;
             transition: opacity 0.5s ease;
         }
-        
+
+
         /* --- Animation States --- */
         .envelope.open .flap.top {
             transform: rotateX(180deg);
         }
+
         .envelope.open .flap.bottom {
             transform: rotateX(-180deg);
         }
+
         .envelope.open .seal {
             opacity: 0;
         }
@@ -101,45 +246,70 @@
         #envelope-container.opening {
             background-color: transparent;
         }
+
         #envelope-container.opening .flap {
             background-color: transparent !important;
         }
+
         #envelope-container.opening .envelope-text {
             opacity: 0;
         }
-        
+
         #envelope-container.hidden {
             opacity: 0;
             pointer-events: none;
         }
+
         /* --- MODIFIED THIS RULE --- */
-        .envelope-text { 
+        .envelope-text {
             position: absolute;
             /* Position text below the seal (seal is at 50%, has 120px height) */
-            top: calc(50% + 75px); 
+            top: calc(50% + 75px);
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
             text-align: center;
-            color: #FAF3E0; 
+            color: #FAF3E0;
             font-family: 'Nunito Sans', sans-serif;
-            font-size: 1.2em; /* Adjusted font size for balance */
+            font-size: 1.2em;
+            /* Adjusted font size for balance */
             transition: opacity 0.5s ease;
-            z-index: 5; /* Keep it above the flaps initially */
+            z-index: 5;
+            /* Keep it above the flaps initially */
         }
-        #seal { width: 100px; height: 100px; background-color: #EAE7DC; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-family: 'Cormorant Garamond', serif; font-size: 1.8em; color: #b8a99a; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border: 3px solid #d4c4b4; }
-        .fade-out { opacity: 0; pointer-events: none; }
+
+        #seal {
+            width: 100px;
+            height: 100px;
+            background-color: #EAE7DC;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8em;
+            color: #b8a99a;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 3px solid #d4c4b4;
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
 
         #main-content {
-            opacity: 0; 
+            opacity: 0;
             z-index: 20;
             position: relative;
             transition: opacity 1s 0.5s ease;
         }
+
         #main-content.visible {
-            opacity: 1; 
+            opacity: 1;
         }
-/* 
+
+        /* 
          * This container is fixed to the bottom. 
          * Its width matches the content cards.
          */
@@ -150,61 +320,255 @@
             transform: translateX(-50%);
             z-index: 100;
             pointer-events: none;
-            
+
             width: 100%;
-            max-width: 650px; /* This makes it match the content width */
+            max-width: 650px;
+            /* This makes it match the content width */
             height: 35vh;
         }
-        
+
         .foreground-image-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: bottom;
         }
+
         /* --- Header & Animation --- */
         .header-content {
-            min-height: 80vh; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; text-align: center; color: #333; overflow: hidden;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #E5D9B2;
+            overflow: hidden;
         }
-        .header-text-box { padding: 2rem; }
-        
+
+        .header-text-box {
+            padding: 1rem;
+        }
+
         @keyframes fadeInSlideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .header-content .subtitle span {
             display: block;
-            opacity: 0; /* Start hidden */
+            opacity: 0;
+            /* Start hidden */
             animation: fadeInSlideUp 1s ease-out forwards;
         }
-        .header-content .subtitle span:first-child { animation-delay: 0.8s; }
-        .header-content .subtitle span:last-child { animation-delay: 0.9s; }
 
-        .header-content h1 { font-family: 'Cormorant Garamond', serif; font-size: 4em; margin: 0.2em 0; font-weight: 600; animation: fadeInSlideUp 2s ease-out 2.1s forwards; opacity: 0; }
-        .header-content .date { font-family: 'Cormorant Garamond', serif;  color: #d58a8a; /* Warm Charcoal Text Color */font-size: 1.5em; margin-top: 0.5em; animation: fadeInSlideUp 2s ease-out 2.2s forwards; opacity: 0; }
+        .header-content .subtitle span:first-child {
+            animation-delay: 0.8s;
+        }
+
+        .header-content .subtitle span:last-child {
+            animation-delay: 0.9s;
+        }
+
+        .header-content h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4em;
+            margin: 0.2em 0;
+            font-weight: 600;
+            animation: fadeInSlideUp 2s ease-out 2.1s forwards;
+            opacity: 0;
+        }
+
+        .header-content .date {
+            font-family: 'Cormorant Garamond', serif;
+            color: #d58a8a;
+            /* Warm Charcoal Text Color */
+            font-size: 1.5em;
+            margin-top: 0.5em;
+            animation: fadeInSlideUp 2s ease-out 2.2s forwards;
+            opacity: 0;
+        }
 
         /* --- Content Sections Styling --- */
         .content-section {
-            padding: 40px 20px ; text-align: center; max-width: 600px;
-            margin: 0 auto; background-color: #FDFDFB; 
-            border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            padding: 40px 20px;
+            text-align: center;
+            max-width: 600px;
+            margin: auto;
+            background-color: rgba(250, 250, 250);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 250, 0.0);
         }
-        .section-icon { font-size: 1.5em; color: #D4A3A3; margin-bottom: 10px; }
-        .content-section h2 { letter-spacing: 2px; font-size: 0.8em; color: #888; text-transform: uppercase; margin-bottom: 5px; }
-        .content-section h3 { font-family: 'Cormorant Garamond', serif; font-size: 2.5em; margin-top: 0; font-weight: 600; color: #333; }
-        .map-link { text-decoration: none; color: #D4A3A3; font-weight: bold; padding-bottom: 2px; margin-top: 15px; display: inline-block; }
 
-        .timeline { list-style: none; padding: 0; margin: 20px auto; max-width: 400px; text-align: left; }
-        .timeline li { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
-        .timeline li:last-child { border-bottom: none; }
-        .timeline-icon { color: #D4A3A3; width: 40px; font-size: 1.2em; text-align: center; margin-right: 15px; }
-        .timeline-time { margin-left: auto; color: #777; }
-        
-        .rsvp-button { background-color: #D4A3A3; color: white; border: none; padding: 15px 30px; font-size: 1em; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease; margin-top: 20px; font-weight: bold; }
-        .rsvp-button:hover { background-color: #C89090; }
-        .respond-by { font-style: italic; font-size: 0.9em; color: #777; margin-top: 15px; }
+        .section-icon {
+            font-size: 1.5em;
+            color: #e5196f;
+            margin: auto;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .content-section h2 {
+            letter-spacing: 2px;
+            font-size: 0.8em;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .content-section h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5em;
+            margin-top: 0;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .map-link {
+            text-decoration: none;
+            color: #e5196f;
+            font-weight: bold;
+            padding-bottom: 2px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        .timeline {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .timeline li {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .timeline li:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-icon {
+            color: #e5196f;
+            width: 40px;
+            font-size: 1.2em;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+        .timeline-time {
+            margin-left: auto;
+            color: #777;
+        }
+
+        .rsvp-button {
+            background-color: #e5196f;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .rsvp-button:hover {
+            background-color: #C89090;
+        }
+
+        .respond-by {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 15px;
+        }
+
+        /* --- ADDED CSS FOR THE IMAGE CARD --- */
+        .split-content-section {
+            display: flex;
+            flex-direction: row;
+            /* Side-by-side on desktop */
+            align-items: center;
+            gap: 25px;
+            /* Space between image and text */
+            text-align: left;
+            /* Align text to the left within its container */
+        }
+
+        .split-content-image {
+            flex: 1;
+            /* Each takes up half the space */
+        }
+
+        .split-content-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            /* Rounded corners for the image */
+            display: block;
+        }
+
+        .split-content-text {
+            flex: 1;
+        }
+
+
+        .split-content-text h2 {
+            text-align: center;
+        }
+
+        .split-content-text .section-icon {
+            text-align: center;
+            /* Ensure all text inside is left-aligned */
+        }
+
+        .split-content-text h3,
+        .split-content-text {
+            text-align: left;
+            /* Ensure all text inside is left-aligned */
+        }
+
+        .split-content-text .timeline {
+            max-width: none;
+            /* Allow timeline to fill its container */
+        }
+
+        /* Responsive stacking for mobile screens */
+        @media (max-width: 600px) {
+            .split-content-section {
+                flex-direction: column;
+                /* Stack image on top of text */
+                text-align: center;
+                /* Re-center text on mobile */
+            }
+
+            .split-content-text h2,
+            .split-content-text h3,
+            .split-content-text .section-icon {
+                text-align: center;
+                /* Center header text on mobile */
+            }
+
+            .split-content-text .timeline {
+                text-align: left;
+                /* Keep timeline text left-aligned */
+            }
+        }
 
         /* --- Splitter Styling --- */
         .splitter {
@@ -215,37 +579,44 @@
             max-width: 600px;
             color: #ccc;
         }
-        .splitter::before, .splitter::after {
+
+        .splitter::before,
+        .splitter::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #DAB96B;
+            ;
         }
+
         .splitter-icon {
             font-size: 1.5em;
             padding: 0 15px;
-            color: #D4A3A3;
+            color: #e5196f;
         }
     </style>
 </head>
-<body>
 
+<body>
+    <div class="background-container"></div>
     <div id="envelope-container">
         <div class="envelope-wrapper">
             <div class="envelope">
                 <div class="flap top"></div>
                 <div class="flap bottom"></div>
                 <div class="seal">J&N</div>
-                <div class="envelope-text"><p>This invitation is exclusively for you</p></div>
+                <div class="envelope-text">
+                    <p>This invitation is exclusively for you</p>
+                </div>
             </div>
         </div>
-        
+
     </div>
-     <audio id="background-music" loop src=""></audio>
+    <audio id="background-music" loop src=""></audio>
     <div id="main-content">
         <div class="foreground-image-container">
             <img src="foreground-image.png" alt="Wedding illustration">
         </div>
-        
+
         <div class="scrollable-content">
             <div class="header-content">
                 <div class="header-text-box">
@@ -253,45 +624,151 @@
                         <span>WE'RE GETTING</span>
                         <span>MARRIED</span>
                     </p>
-                  <h1>Jithin </br>&</br>Neethu</h1>
+                    <h1>Jithin </br>&</br>Neethu</h1>
                     <p class="date">August 19th, 2026</p>
                 </div>
             </div>
 
-            <div class="content-section">
-                <div class="section-icon"><i class="fa-solid fa-gopuram"></i></div>
-                <h2>THE WEDDING</h2>
-                <h3>Guruvayur Sree Krishna Temple</h3>
-                <p><strong>6:00 AM</strong>, Thalikettu</p>
-                <p>Temple, East Nada, Guruvayur, Kerala</p>
-                <a href="https://www.google.com/maps/place/Guruvayur+Sree+Krishna+Temple/@10.5946914,76.0394266,1011m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba79461d5c8d24b:0x6f7a8d815f48709e!8m2!3d10.5946914!4d76.0394266!16zL20vMDZ6cDdn?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D" class="map-link">View on Google Maps <i class="fa-solid fa-arrow-right-long fa-sm"></i></a>
-            </div>
+            <section class="content-section fade-in-element">
+                <div class="split-content-section">
+                    <div class="split-content-image">
+                        <!-- IMPORTANT: Change "ceremony-image.jpg" to your actual image file name -->
+                        <img src="couple.png" alt="Photo of the couple or venue" class="fade-in-image">
+                    </div>
+                    <div class="split-content-text">
+                        <div class="section-icon"><i class="fa-solid fa-gopuram"></i></div>
+                        <h1>THE WEDDING</h2>
+                            <h3>Guruvayur Sree Krishna Temple</h3>
+                            <p><strong>6:00 AM</strong>, Thalikettu</p>
+                            <p>Temple, East Nada, Guruvayur, Kerala</p>
+                            <a href="https://www.google.com/maps/place/Guruvayur+Sree+Krishna+Temple/@10.5946914,76.0394266,1011m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3ba79461d5c8d24b:0x6f7a8d815f48709e!8m2!3d10.5946914!4d76.0394266!16zL20vMDZ6cDdn?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D"
+                                class="map-link">View on Google Maps <i
+                                    class="fa-solid fa-arrow-right-long fa-sm"></i></a>
+
+                    </div>
+                </div>
+            </section>
 
             <div class="splitter">
                 <span class="splitter-icon">💍</span>
             </div>
 
-            <div class="content-section">
-                <div class="section-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
-                <h2>THE CEREMONY</h2>
-                <h3>Gokulam Vanamala Auditorium</h3>
-                <a href="https://www.google.com/maps/place/Sree+Gokulam+Vanamala/@10.593086,76.0376152,1011m/data=!3m1!1e3!4m9!3m8!1s0x3ba7948a1a3f5379:0x7e6854449c21c7c2!5m2!4m1!1i2!8m2!3d10.593086!4d76.0401901!16s%2Fg%2F11bwpdsr8_?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D" class="map-link">View on Google Maps <i class="fa-solid fa-arrow-right-long fa-sm"></i></a>
-                <ul class="timeline">
-                    <li><div class="timeline-icon"><i class="fa-solid fa-heart" ></i></div> <span>Wedding Ceremony</span> <span class="timeline-time">9:00 AM - 11:00 AM</span></li>
-                    <li><div class="timeline-icon"><i class="fa-solid fa-utensils"></i></div> <span>Lunch</span> <span class="timeline-time">11:00 PM - 12:00 PM</span></li>
-                    
-                </ul>
+
+            <div class="calendar-container">
+                <div class="calendar" id="calendar">
+                    <div class="calendar-header">August</div>
+                    <div class="days-grid">
+                        <!-- Days of the week -->
+                        <div class="day-name animated-element">Sun</div>
+                        <div class="day-name animated-element">Mon</div>
+                        <div class="day-name animated-element">Tue</div>
+                        <div class="day-name animated-element">Wed</div>
+                        <div class="day-name animated-element">Thu</div>
+                        <div class="day-name animated-element">Fri</div>
+                        <div class="day-name animated-element">Sat</div>
+
+                        <!-- Empty slots -->
+                        <div class="day empty"></div>
+                        <div class="day empty"></div>
+                        <div class="day empty"></div>
+                        <div class="day empty"></div>
+                        <div class="day empty"></div>
+                        <div class="day empty"></div>
+
+                        <!-- Dates -->
+                        <div class="day animated-element">1</div>
+                        <div class="day animated-element">2</div>
+                        <div class="day animated-element">3</div>
+                        <div class="day animated-element">4</div>
+                        <div class="day animated-element">5</div>
+                        <div class="day animated-element">6</div>
+                        <div class="day animated-element">7</div>
+                        <div class="day animated-element">8</div>
+                        <div class="day animated-element">9</div>
+                        <div class="day animated-element">10</div>
+                        <div class="day animated-element">11</div>
+                        <div class="day animated-element">12</div>
+                        <div class="day animated-element">13</div>
+                        <div class="day animated-element">14</div>
+                        <div class="day animated-element">15</div>
+                        <div class="day animated-element">16</div>
+                        <div class="day animated-element">17</div>
+                        <div class="day animated-element">18</div>
+                        <div class="day circled animated-element">19</div>
+                        <div class="day animated-element">20</div>
+                        <div class="day animated-element">21</div>
+                        <div class="day animated-element">22</div>
+                        <div class="day animated-element">23</div>
+                        <div class="day animated-element">24</div>
+                        <div class="day animated-element">25</div>
+                        <div class="day animated-element">26</div>
+                        <div class="day animated-element">27</div>
+                        <div class="day animated-element">28</div>
+                        <div class="day animated-element">29</div>
+                        <div class="day animated-element">30</div>
+                        <div class="day animated-element">31</div>
+                    </div>
+                </div>
+            </div>
+            <div class="splitter">
+                <span class="splitter-icon">💍</span>
             </div>
 
+
+            <!-- MODIFIED THIS SECTION -->
+            <section class="content-section fade-in-element">
+                <div class="split-content-section">
+                    <div class="split-content-image">
+                        <!-- IMPORTANT: Change "ceremony-image.jpg" to your actual image file name -->
+                        <img src="couple-2.png" alt="Photo of the couple or venue" class="fade-in-image">
+                    </div>
+                    <div class="split-content-text">
+                        <div class="section-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
+                        <h2>THE CEREMONY</h2>
+                        <h3>Gokulam Vanamala Auditorium</h3>
+                        <a href="https://www.google.com/maps/place/Sree+Gokulam+Vanamala/@10.593086,76.0376152,1011m/data=!3m1!1e3!4m9!3m8!1s0x3ba7948a1a3f5379:0x7e6854449c21c7c2!5m2!4m1!1i2!8m2!3d10.593086!4d76.0401901!16s%2Fg%2F11bwpdsr8_?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D"
+                            class="map-link">View on Google Maps <i class="fa-solid fa-arrow-right-long fa-sm"></i></a>
+
+                    </div>
+                </div>
+            </section>
+
+
             <div class="splitter">
-                <span class="splitter-icon">✨</span>
+                <span class="splitter-icon">💍</span>
             </div>
+
+            <!-- MODIFIED THIS SECTION -->
+            <section class="content-section fade-in-element">
+                <div class="split-content-section">
+
+                    <div class="split-content-text">
+                        <div class="section-icon"><i class="fa-solid fa-users"></i></div>
+                        <h2>THE EVENTS</h2>
+
+                        <ul class="timeline">
+                            <li>
+                                <div class="timeline-icon"><i class="fa-solid fa-heart"></i></div> <span>Wedding
+                                    Ceremony</span> <span class="timeline-time">9:00 AM - 11:00 AM</span>
+                            </li>
+                            <li>
+                                <div class="timeline-icon"><i class="fa-solid fa-utensils"></i></div> <span>Lunch</span>
+                                <span class="timeline-time">11:00 PM - 12:00 PM</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="split-content-image">
+                        <!-- IMPORTANT: Change "ceremony-image.jpg" to your actual image file name -->
+                        <img src="img_3.png" alt="Photo of the couple or venue" class="fade-in-image">
+                    </div>
+                </div>
+            </section>
 
         </div>
     </div>
 
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const envelopeContainer = document.getElementById('envelope-container');
             const envelope = document.querySelector('.envelope');
             const mainContent = document.getElementById('main-content');
@@ -299,23 +776,84 @@
             const backgroundMusic = document.getElementById('background-music');
             let isOpening = false;
 
-            envelopeContainer.addEventListener('click', function() {
+            envelopeContainer.addEventListener('click', function () {
                 if (isOpening) return;
                 isOpening = true;
-                  // Play the music
+                // Play the music
                 if (backgroundMusic) {
                     backgroundMusic.play();
                 }
                 envelope.classList.add('open');
                 mainContent.classList.add('visible');
                 envelopeContainer.classList.add('opening');
-                
+
                 setTimeout(() => {
                     body.classList.add('content-visible');
                     envelopeContainer.classList.add('hidden');
-                }, 1500); 
+                }, 1500);
             });
+            const calendar = document.getElementById('calendar');
+            const animatedElements = document.querySelectorAll('.animated-element');
+
+            // Create an Intersection Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // When the calendar enters the screen
+                    if (entry.isIntersecting) {
+                        calendar.classList.add('is-visible'); // For the header fade-in
+
+                        // Setup and trigger the flying elements
+                        animatedElements.forEach(el => {
+                            const startX = (Math.random() - 0.5) * 1200;
+                            const startY = (Math.random() - 0.5) * 1200;
+                            const startRot = (Math.random() - 0.5) * 360;
+
+                            el.style.setProperty('--startX', `${startX}px`);
+                            el.style.setProperty('--startY', `${startY}px`);
+                            el.style.setProperty('--startRot', `${startRot}deg`);
+                            el.style.animationDelay = `${Math.random() * 0.4}s`;
+
+                            // Add the class that triggers the keyframe animation
+                            el.classList.add('start-animation');
+                        });
+
+                        // Stop observing once the animation has been triggered
+                        observer.unobserve(calendar);
+                    }
+                });
+            }, {
+                // This threshold means the animation triggers when 30% of the calendar is visible
+                threshold: 0.3
+            });
+
+            // Start observing the calendar container
+            observer.observe(calendar);
         });
+
+        // 1. Select all the elements you want to animate
+        const fadeElements = document.querySelectorAll('.fade-in-element');
+
+        // 2. Set up the observer to watch for the elements
+        const observer = new IntersectionObserver((entries) => {
+            // This function runs when an element's visibility changes
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // If the element is on screen, add the 'is-visible' class to trigger the animation
+                    entry.target.classList.add('is-visible');
+                    // Stop watching the element once it has faded in
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+
+        // 3. Start observing each of the elements
+        fadeElements.forEach(element => {
+            observer.observe(element);
+        });
+
     </script>
 </body>
+
 </html>
